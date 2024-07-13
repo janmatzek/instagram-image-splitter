@@ -100,7 +100,7 @@ def main():
     """
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter,
-        description=textwrap.dedent("""Instagram grid and stripes"""),
+        description=textwrap.dedent("""Insta-splitter - Instagram grid and stripes"""),
     )
 
     # Mode
@@ -111,10 +111,10 @@ def main():
         help=textwrap.dedent(
             """\
                     Select the mode to split the image.
-                    - 'single-square': split the image into a single square.
-                    - 'three-squares': split the image horizontally into three squares.
-                    - 'grid': split the image into a grid of rows and columns.
-                    - If ommited, image will not be left in original shape."""
+                    - single-square: split the image into a single square.
+                    - three-squares: split the image horizontally into three squares.
+                    - grid: split the image into a grid of rows and columns.
+                    - If ommited, image will be left in original shape."""
         ),
     )
 

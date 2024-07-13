@@ -4,4 +4,7 @@
 *.jpeg
 *.png
 *.gif
+build/*
+*.egg
+*.egg-info
 __pycache__/*
