@@ -13,4 +13,16 @@ setup(
     install_requires=[
         "pillow",
     ],
+    author="janmatzek",
+    author_email="jan.matzek@gmail.com",
+    description="A CLI tool for Instagram grid and stripes",
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
+    url="https://github.com/janmatzek/instagram-image-splitter",
+    classifiers=[
+        'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+    ],
+    python_requires='>=3.6',
 )
