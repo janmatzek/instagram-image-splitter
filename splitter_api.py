@@ -17,8 +17,8 @@ origins = [os.getenv('FRONTEND_URL')]
 print("Origins: ", origins)
 app = FastAPI(
     title="Image Splitter API",
-    description="API for splitting images into a grid of rows and columns and applying white stripes to top and bottom.",
-
+    description="""API for splitting images into a grid of rows and columns
+    and applying white stripes to top and bottom.""",
 )
 
 app.add_middleware(
@@ -30,21 +30,24 @@ app.add_middleware(
 )
 
 @app.get("/health")
-def health_check():
+async def health_check():
+    """Checks whether the service is online"""
     return {"Status": "Healthy"}
 
 @app.post("/process-image/")
-async def process_image_endpoint(
+async def process_image(
     file: UploadFile = File(...),
     rows: int = Form(1),
     columns: int = Form(3),
     stripes: str = Form('false'),
     stripe_height: float = Form(1/6)
     ):
+    """Process incoming image file by splitting it into a grid and optionally adding white stripes 
+    to the top and bottom of each grid cell."""
 
     if file.content_type not in ["image/jpeg", "image/png", "image/jpg"]:
         raise HTTPException(status_code=400, detail="Unsupported file type")
-    
+
     stripes = stripes.lower() in ['true', '1', 't', 'y', 'yes']
 
     print("File type: ", file.content_type)
@@ -57,17 +60,16 @@ async def process_image_endpoint(
     image = Image.open(io.BytesIO(await file.read()))
 
     # Process the image
-    processed_image = (split_to_grid(image, rows, columns))
-    
+    processed_image = split_to_grid(image, rows, columns)
+
     if stripes:
         processed_image = [white_stripes(img, stripe_height) for img in processed_image]
 
-    
     # Save the processed image to a bytes buffer
     input_format = file.content_type.split('/')[-1].upper()
     if input_format == 'JPG':
         input_format = 'JPEG'
-    
+
     buf = io.BytesIO()
 
     with zipfile.ZipFile(buf, 'w') as zip_file:
@@ -78,6 +80,10 @@ async def process_image_endpoint(
             zip_file.writestr(f'image_{i}.{input_format.lower()}', img_buf.read())
 
     buf.seek(0)
-    
-    return StreamingResponse(buf, media_type="application/zip", headers={"Content-Disposition": "attachment;filename=processed_images.zip"})
+
+    return StreamingResponse(
+        buf,
+        media_type="application/zip",
+        headers={"Content-Disposition": "attachment;filename=processed_images.zip"}
+        )
     
