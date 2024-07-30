@@ -13,7 +13,7 @@ from splitter import split_to_grid, white_stripes
 
 load_dotenv()
 
-origins = [os.getenv('FRONTEND_URL')]
+origins = [os.getenv('FRONTEND_URL'), "http://localhost:5173/"]
 print("Origins: ", origins)
 app = FastAPI(
     title="Image Splitter API",
@@ -28,6 +28,11 @@ app.add_middleware(
     allow_methods=["*"],  # Allow all HTTP methods
     allow_headers=["*"],  # Allow all headers
 )
+
+@app.get("/")
+async def read_root():
+    "Check"
+    return {"Hello": "World"}
 
 @app.get("/health")
 async def health_check():
